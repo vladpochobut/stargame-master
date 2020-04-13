@@ -4,22 +4,23 @@ import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static sample.ControllerUtils.PLAYER_INIT_POS_X;
+import static sample.ControllerUtils.*;
 
 public class Main extends Application {
-    private Pane root = new Pane();
-    private double t = 0;
 
-    private Player player = new Player(PLAYER_INIT_POS_X, 750, 40, 40);
+    private MainGamePane root = new MainGamePane();
+    private double t = 0;
+    private double bonus = 0;
+
+    private Player player = new Player(PLAYER_INIT_POS_X, 750, PLAYER_WIDTH, PLAYER_HEIGHT);
 
     private Parent createContent() {
-        root.setPrefSize(600, 800);
+        root.setPrefSize(SCENE_WIDTH, SCENE_HEIGHT);
         root.getChildren().addAll(player);
         AnimationTimer animationTimer = new AnimationTimer() {
             @Override
@@ -28,47 +29,53 @@ public class Main extends Application {
             }
         };
         animationTimer.start();
-        nextLevel();
+        firstLevel();
         return root;
     }
 
-    private void nextLevel() {
-        for (int i = 0; i < 20; i++) {
-            Sprite s = new SimpleEnemy(90 + i * 40, 150, 30, 30);
-
-            root.getChildren().add(s);
+    private void secondLevel() {
+        for (int i = 0; i < NUMBER_OF_NORMAL_ENEMIES; i++) {
+            Sprite normalEnemy = new NormalEnemy(60 + i * 50, 200, ENEMY_WIDTH, ENEMY_HEIGHT);
+            root.getChildren().add(normalEnemy);
+            bonus++;
+        }
+        for (Sprite enemyN : sprites()) {
+            if (enemyN instanceof NormalEnemy) {
+                ((NormalEnemy) enemyN).move();
+            }
         }
     }
 
-    private List<Sprite> sprites() {
-        return root.getChildren().stream().map(n -> (Sprite) n).collect(Collectors.toList());
-    }
+    private void firstLevel() {
+        for (int i = 0; i < NUMBER_OF_SIMPLE_ENEMIES; i++) {
+            Sprite simpleEnemy = new SimpleEnemy(60 + i * 50, 100, ENEMY_WIDTH, ENEMY_HEIGHT);
+            root.getChildren().add(simpleEnemy);
+        }
 
-    private void chaoticMove(Sprite enemy) {
-//        Random random = new Random();
-//        int move = random.nextInt(20);
-//        if (random.nextInt(5) == 2) {
-//            move = move * -1;
-//        }
-//        enemy.setTranslateX(enemy.getTranslateX() + move);
-    }
-
-    private void update() {
-        t += 0.016;
 
         for (Sprite enemy : sprites()) {
             if (enemy instanceof SimpleEnemy) {
-                chaoticMove(enemy);
+                ((SimpleEnemy) enemy).move();
             }
         }
 
+    }
+
+    private List<Sprite> sprites() {
+        return root.getChildren().stream().filter(n -> n instanceof Sprite).map(n -> (Sprite) n).collect(Collectors.toList());
+    }
+
+
+    private void update() {
+        t += 0.016;
+        if(bonus == NUMBER_OF_SIMPLE_ENEMIES){secondLevel();}
         sprites().forEach(s -> {
             if (s instanceof EnemyBullet) {
                 s.moveDown();
-
                 if (s.getBoundsInParent().intersects(player.getBoundsInParent())) {
                     player.setDead(true);
                     s.setDead(true);
+
                 }
             }
 
@@ -78,6 +85,18 @@ public class Main extends Application {
                     if (s.getBoundsInParent().intersects(enemy.getBoundsInParent())) {
                         enemy.setDead(true);
                         s.setDead(true);
+                        bonus++;
+                    }
+                });
+            }
+
+            if (s instanceof PlayerBullet) {
+                s.moveUp();
+                sprites().stream().filter(e -> e instanceof NormalEnemy).forEach(enemy -> {
+                    if (s.getBoundsInParent().intersects(enemy.getBoundsInParent())) {
+                        enemy.setDead(true);
+                        s.setDead(true);
+                        bonus++;
                     }
                 });
             }
@@ -92,20 +111,33 @@ public class Main extends Application {
                 }
 
             }
+            if (s instanceof NormalEnemy) {
+
+                if (t > 2) {
+                    if (Math.random() < 0.5) {
+                        Sprite enemyBullet = ((NormalEnemy) s).shoot();
+                        root.getChildren().add(enemyBullet);
+                    }
+                }
+
+            }
         });
         root.getChildren().removeIf(n -> {
-            Sprite s = (Sprite) n;
-            return s.isDead();
+            if (n instanceof Sprite) {
+                Sprite s = (Sprite) n;
+                return s.isDead();
+            }
+            return false;
         });
         if (t > 2) {
             t = 0;
         }
+        root.setScore(bonus);
     }
 
     @Override
     public void start(Stage primaryStage) {
         Scene scene = new Scene(createContent());
-
         scene.setOnKeyPressed(e -> {
             switch (e.getCode()) {
                 case A:

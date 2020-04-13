@@ -14,6 +14,7 @@ public class Player extends ActiveObject {
 
     @Override
     public Sprite shoot() {
-        return new PlayerBullet((int) this.getTranslateX() + 20, (int) this.getTranslateY(), 5, 5, BULLET_IMAGE);
+        return new PlayerBullet((int) this.getTranslateX() + 15, (int) this.getTranslateY(), BULLET_WIDTH, BULLET_HEIGHT, BULLET_IMAGE);
     }
+
 }
