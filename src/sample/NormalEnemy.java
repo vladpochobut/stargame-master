@@ -22,15 +22,7 @@ public class NormalEnemy extends ActiveObject {
         return new EnemyBullet((int) this.getTranslateX() + 20, (int) this.getTranslateY(), BULLET_WIDTH, BULLET_HEIGHT, BULLET_IMAGE);
     }
     public void move() {
-        /*KeyValue xValue = new KeyValue(this.xProperty(), 100);
-        KeyValue yValue = new KeyValue(this.yProperty(), 100);
-        KeyFrame keyFrame = new KeyFrame(Duration.millis(1000), xValue, yValue);
 
-        Timeline timeline = new Timeline();
-        timeline.setCycleCount(Timeline.INDEFINITE);
-        timeline.setAutoReverse(true);
-        timeline.getKeyFrames().addAll(keyFrame);
-        timeline.play();*/
         movePivot(this, this.getTranslateX(), this.getTranslateY());
 
         RotateTransition rt = new RotateTransition(Duration.seconds(6),this);

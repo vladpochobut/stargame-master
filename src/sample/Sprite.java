@@ -7,6 +7,8 @@ import javafx.scene.shape.Rectangle;
 public class Sprite extends Rectangle {
     private boolean dead = false;
 
+
+
     Sprite(int x, int y, int w, int h, Image image) {
         setWidth(w);
         setHeight(h);
@@ -24,11 +26,22 @@ public class Sprite extends Rectangle {
     }
 
     void moveUp() {
+
         setTranslateY(getTranslateY() - 5);
     }
 
     void moveDown() {
         setTranslateY(getTranslateY() + 5);
+    }
+
+    void moveAtAnAngleRigth() {
+        setTranslateY(getTranslateY() - 5);
+        setTranslateX(getTranslateX() + 5);
+    }
+
+    void moveAtAnAngleLeft() {
+        setTranslateY(getTranslateY() - 5);
+        setTranslateX(getTranslateX() - 5);
     }
 
     public boolean isDead() {

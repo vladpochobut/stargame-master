@@ -1,5 +1,6 @@
 package sample;
 
+import static sample.ControllerUtils.*;
 import javafx.animation.*;
 import javafx.application.Application;
 import javafx.geometry.Pos;
@@ -18,47 +19,53 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-public class GameMenu extends Application {
+public class GameMenu extends Pane {
 
-    @Override
-    public void start(Stage primaryStage) {
-        Pane root = new Pane();
-        Image image = new Image(getClass().getResourceAsStream("4v1.jpg"));
-        ImageView img = new ImageView(image);
-        img.setFitHeight(741);
-        img.setFitWidth(496);
-        root.getChildren().add(img);
+    private Stage primaryStage;
 
-        MenuItem newGame = new MenuItem("НОВАЯ ИГРА");
+    public GameMenu(Stage primaryStage) {
+        super();
+        this.primaryStage = primaryStage;
+        Image MENU_IMG = new Image(MENU_IMG_PATH);
+        ImageView img = new ImageView(MENU_IMG);
+        img.setFitHeight(1000);
+        img.setFitWidth(1200);
+        this.getChildren().add(img);
+
+        MenuItem newGame = new MenuItem("START!");
+        newGame.setOnMouseClicked(event -> this.primaryStage.setScene((new MainGamePane(primaryStage)).getScene()));
         MenuItem options = new MenuItem("НАСТРОЙКИ");
         MenuItem exitGame = new MenuItem("ВЫХОД");
         SubMenu mainMenu = new SubMenu(
                 newGame, options, exitGame
         );
         MenuItem sound = new MenuItem("ЗВУК");
+        MenuItem gameDifficulty = new MenuItem("СЛОЖНОСТЬ");
+
         MenuItem video = new MenuItem("ВИДЕО");
-        MenuItem keys = new MenuItem("УПРАВЛЕНИЕ");
+    //    MenuItem keys = new MenuItem("УПРАВЛЕНИЕ");
         MenuItem optionsBack = new MenuItem("НАЗАД");
         SubMenu optionsMenu = new SubMenu(
-                sound, video, keys, optionsBack
+                sound, video/* keys*/,gameDifficulty,optionsBack
         );
-        MenuItem NG1 = new MenuItem("ТУРНИР");
-        MenuItem NG2 = new MenuItem("ОДИН ЗАЕЗД");
-        MenuItem NG3 = new MenuItem("2 ИГРОКА");
-        MenuItem NG4 = new MenuItem("НАЗАД");
-        SubMenu newGameMenu = new SubMenu(
-                NG1, NG2, NG3, NG4
-        );
+//        MenuItem NG1 = new MenuItem("ТУРНИР");
+
+//        MenuItem NG2 = new MenuItem("ОДИН ЗАЕЗД");
+//        MenuItem NG3 = new MenuItem("2 ИГРОКА");
+//        MenuItem NG4 = new MenuItem("НАЗАД");
+//        SubMenu newGameMenu = new SubMenu(
+//                NG1, NG2, NG3, NG4
+//        );
         MenuBox menuBox = new MenuBox(mainMenu);
 
-        newGame.setOnMouseClicked(event -> menuBox.setSubMenu(newGameMenu));
+   //     newGame.setOnMouseClicked(event -> menuBox.setSubMenu(newGameMenu));
         options.setOnMouseClicked(event -> menuBox.setSubMenu(optionsMenu));
         exitGame.setOnMouseClicked(event -> System.exit(0));
         optionsBack.setOnMouseClicked(event -> menuBox.setSubMenu(mainMenu));
-        NG4.setOnMouseClicked(event -> menuBox.setSubMenu(mainMenu));
-        root.getChildren().addAll(menuBox);
+    //    NG4.setOnMouseClicked(event -> menuBox.setSubMenu(mainMenu));
+        this.getChildren().addAll(menuBox);
 
-        Scene scene = new Scene(root, 900, 600);
+        Scene scene = new Scene(this, 1200, 1000);
         scene.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ESCAPE) {
                 FadeTransition ft = new FadeTransition(Duration.seconds(1), menuBox);
@@ -76,15 +83,12 @@ public class GameMenu extends Application {
                 }
             }
         });
-        primaryStage.setTitle("Pause");
-        primaryStage.setScene(scene);
-        primaryStage.show();
     }
 
     private static class MenuItem extends StackPane {
         public MenuItem(String name) {
             Rectangle bg = new Rectangle(200, 20, Color.WHITE);
-            bg.setOpacity(0.5);
+            bg.setOpacity(0.7);
 
             Text text = new Text(name);
             text.setFill(Color.WHITE);
@@ -114,7 +118,7 @@ public class GameMenu extends Application {
             MenuBox.subMenu = subMenu;
 
             setVisible(false);
-            Rectangle bg = new Rectangle(900, 600, Color.LIGHTBLUE);
+            Rectangle bg = new Rectangle(1200, 1000, Color.BLACK);
             bg.setOpacity(0.4);
             getChildren().addAll(bg, subMenu);
         }
