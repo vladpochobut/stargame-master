@@ -14,13 +14,15 @@ public class NormalEnemy extends ActiveObject {
     private static final Image NORMAL_ENEMY_IMAGE = new Image(NORMAL_ENEMY_IMG_PATH);
 
     NormalEnemy(int x, int y, int w, int h) {
-        super(x, y, w, h, NORMAL_ENEMY_IMAGE);
+        super(x, y, w, h, NORMAL_ENEMY_IMAGE, NORMAL_ENEMY_HP);
     }
 
     @Override
-    public Sprite shoot() {
-        return new EnemyBullet((int) this.getTranslateX() + 20, (int) this.getTranslateY(), BULLET_WIDTH, BULLET_HEIGHT, BULLET_IMAGE);
+    public void shoot() {
+        Main.getMainGamePane().getChildren().add(new EnemyBullet((int) this.getTranslateX() + 20, (int) this.getTranslateY(),
+                BULLET_WIDTH, BULLET_HEIGHT, BULLET_IMAGE, ENEMY_BULLET_DAMAGE));
     }
+
     public void move() {
 
         movePivot(this, this.getTranslateX(), this.getTranslateY());

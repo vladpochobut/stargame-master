@@ -12,23 +12,22 @@ import java.util.stream.Collectors;
 import static sample.ControllerUtils.*;
 
 public class MainGamePane extends Pane {
-    private final Player player;
+    private Player player;
     private Text score;
     private double t = 0;
     private double k = 0;
     private double bonus = 0;
     private int bonus_apd = 0;
-    private Stage primaryStage;
-    private int hits = 0;
     private int kolOfDead = 0;
-    private int kolOfAllife = 0;
-    private PlayerLife life;
+    private int kolOfAlive = 0;
 
-    public MainGamePane(Stage primaryStage) {
+    public MainGamePane() {
         super();
-        this.primaryStage = primaryStage;
-        this.player = new Player(PLAYER_INIT_POS_X, 750, PLAYER_WIDTH, PLAYER_HEIGHT);
-        this.life = new PlayerLife(580,780, LIFE_WIDTH,LIFE_HEIGHT);
+    }
+
+    public void start() {
+        Life life = new Life(580, 780, LIFE_WIDTH, LIFE_HEIGHT);
+        this.player = new Player(PLAYER_INIT_POS_X, 750, PLAYER_WIDTH, PLAYER_HEIGHT, PLAYER_HP, life);
         this.getChildren().add(life);
         this.score = new Text();
         this.getChildren().add(score);
@@ -56,12 +55,9 @@ public class MainGamePane extends Pane {
                     player.moveRight();
                     break;
                 case SPACE:
-                    Sprite bullet = player.shoot();
-                    this.getChildren().addAll(bullet);
+                    player.shoot();
                     if (bonus_apd == 1) {
-                        Sprite doubleBullet = player.shoot1();
-                        this.getChildren().add(doubleBullet);
-                        this.getChildren().remove(bullet);
+                        player.shoot1();
                     }
 
                     break;
@@ -79,10 +75,8 @@ public class MainGamePane extends Pane {
             if (s instanceof EnemyBullet) {
                 s.moveDown();
                 if (s.getBoundsInParent().intersects(player.getBoundsInParent())) {
-                    hits++;
-                    player.setDead(true);
+                    player.takeDamage(((EnemyBullet) s).getDamage());
                     s.setDead(true);
-
                 }
             }
             if (s instanceof BonusCoin) {
@@ -98,7 +92,7 @@ public class MainGamePane extends Pane {
                 s.moveUp();
                 sprites().stream().filter(e -> e instanceof SimpleEnemy).forEach(enemy -> {
                     if (s.getBoundsInParent().intersects(enemy.getBoundsInParent())) {
-                        enemy.setDead(true);
+                        ((SimpleEnemy) enemy).takeDamage(((PlayerBullet) s).getDamage());
                         kolOfDead++;
                         s.setDead(true);
                         bonus++;
@@ -110,7 +104,7 @@ public class MainGamePane extends Pane {
                 s.moveUp();
                 sprites().stream().filter(e -> e instanceof NormalEnemy).forEach(enemy -> {
                     if (s.getBoundsInParent().intersects(enemy.getBoundsInParent())) {
-                        enemy.setDead(true);
+                        ((NormalEnemy) enemy).takeDamage(((PlayerBullet) s).getDamage());
                         kolOfDead++;
                         s.setDead(true);
                         bonus++;
@@ -118,26 +112,24 @@ public class MainGamePane extends Pane {
                 });
             }
 
-            if (s instanceof SimpleEnemy) {
-
-                if (t > 2) {
-                    if (Math.random() < 0.8) {
-                        Sprite enemyBullet = ((SimpleEnemy) s).shoot();
-                        this.getChildren().add(enemyBullet);
-                    }
-                }
-
-            }
-            if (s instanceof NormalEnemy) {
-
-                if (t > 2) {
-                    if (Math.random() < 0.8) {
-                        Sprite enemyBullet = ((NormalEnemy) s).shoot();
-                        this.getChildren().add(enemyBullet);
-                    }
-                }
-
-            }
+//            if (s instanceof SimpleEnemy) {
+//
+//                if (t > 2) {
+//                    if (Math.random() < 0.8) {
+//                        ((SimpleEnemy) s).shoot();
+//                    }
+//                }
+//
+//            }
+//            if (s instanceof NormalEnemy) {
+//
+//                if (t > 2) {
+//                    if (Math.random() < 0.8) {
+//                        ((NormalEnemy) s).shoot();
+//                    }
+//                }
+//
+//            }
 
         });
         this.getChildren().removeIf(n -> {
@@ -150,18 +142,16 @@ public class MainGamePane extends Pane {
         if (t > 2) {
             t = 0;
         }
-        if (kolOfAllife == kolOfDead) {
+        if (kolOfAlive == kolOfDead) {
             firstLevel();
-
         }
-        this.setLife(hits);
         this.setScore(bonus);
     }
 
 
     private void secondLevel() {
         bonus++;
-        for (int i = 0; i < NUMBER_OF_NORMAL_ENEMIES; i++, kolOfAllife++) {
+        for (int i = 0; i < NUMBER_OF_NORMAL_ENEMIES; i++, kolOfAlive++) {
             Sprite normalEnemy = new NormalEnemy(90 + i * 60, 200, ENEMY_WIDTH, ENEMY_HEIGHT);
             this.getChildren().add(normalEnemy);
         }
@@ -174,7 +164,7 @@ public class MainGamePane extends Pane {
     }
 
     private void firstLevel() {
-        for (int i = 0; i < NUMBER_OF_SIMPLE_ENEMIES; i++, kolOfAllife++) {
+        for (int i = 0; i < NUMBER_OF_SIMPLE_ENEMIES; i++, kolOfAlive++) {
             Sprite simpleEnemy = new SimpleEnemy(60 + i * 50, 100, ENEMY_WIDTH, ENEMY_HEIGHT);
             this.getChildren().add(simpleEnemy);
         }
@@ -182,7 +172,7 @@ public class MainGamePane extends Pane {
 
         for (Sprite enemy : sprites()) {
             if (enemy instanceof SimpleEnemy) {
-                ((SimpleEnemy) enemy).move();
+                ((SimpleEnemy) enemy).move(1);
             }
         }
 
@@ -208,9 +198,6 @@ public class MainGamePane extends Pane {
 
     public void setScore(double scoreValue) {
         score.setText("Score : " + scoreValue);
-    }
-    public void setLife(int kolOfTakenBullets){
-        if(kolOfTakenBullets == 1){life.setW(life.getW() - (kolOfTakenBullets*19));}
     }
 }
 

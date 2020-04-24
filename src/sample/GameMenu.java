@@ -1,8 +1,8 @@
 package sample;
 
-import static sample.ControllerUtils.*;
-import javafx.animation.*;
-import javafx.application.Application;
+import javafx.animation.Animation;
+import javafx.animation.FadeTransition;
+import javafx.animation.FillTransition;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -16,16 +16,14 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
 import javafx.util.Duration;
+
+import static sample.ControllerUtils.MENU_IMG_PATH;
 
 public class GameMenu extends Pane {
 
-    private Stage primaryStage;
-
-    public GameMenu(Stage primaryStage) {
+    public GameMenu() {
         super();
-        this.primaryStage = primaryStage;
         Image MENU_IMG = new Image(MENU_IMG_PATH);
         ImageView img = new ImageView(MENU_IMG);
         img.setFitHeight(1000);
@@ -33,7 +31,10 @@ public class GameMenu extends Pane {
         this.getChildren().add(img);
 
         MenuItem newGame = new MenuItem("START!");
-        newGame.setOnMouseClicked(event -> this.primaryStage.setScene((new MainGamePane(primaryStage)).getScene()));
+        newGame.setOnMouseClicked(event -> {
+            Main.getMainGamePane().start();
+            Main.getPrimaryStage().setScene(Main.getMainGamePane().getScene());
+        });
         MenuItem options = new MenuItem("НАСТРОЙКИ");
         MenuItem exitGame = new MenuItem("ВЫХОД");
         SubMenu mainMenu = new SubMenu(
@@ -43,10 +44,10 @@ public class GameMenu extends Pane {
         MenuItem gameDifficulty = new MenuItem("СЛОЖНОСТЬ");
 
         MenuItem video = new MenuItem("ВИДЕО");
-    //    MenuItem keys = new MenuItem("УПРАВЛЕНИЕ");
+        //    MenuItem keys = new MenuItem("УПРАВЛЕНИЕ");
         MenuItem optionsBack = new MenuItem("НАЗАД");
         SubMenu optionsMenu = new SubMenu(
-                sound, video/* keys*/,gameDifficulty,optionsBack
+                sound, video/* keys*/, gameDifficulty, optionsBack
         );
 //        MenuItem NG1 = new MenuItem("ТУРНИР");
 
@@ -58,11 +59,11 @@ public class GameMenu extends Pane {
 //        );
         MenuBox menuBox = new MenuBox(mainMenu);
 
-   //     newGame.setOnMouseClicked(event -> menuBox.setSubMenu(newGameMenu));
+        //     newGame.setOnMouseClicked(event -> menuBox.setSubMenu(newGameMenu));
         options.setOnMouseClicked(event -> menuBox.setSubMenu(optionsMenu));
         exitGame.setOnMouseClicked(event -> System.exit(0));
         optionsBack.setOnMouseClicked(event -> menuBox.setSubMenu(mainMenu));
-    //    NG4.setOnMouseClicked(event -> menuBox.setSubMenu(mainMenu));
+        //    NG4.setOnMouseClicked(event -> menuBox.setSubMenu(mainMenu));
         this.getChildren().addAll(menuBox);
 
         Scene scene = new Scene(this, 1200, 1000);

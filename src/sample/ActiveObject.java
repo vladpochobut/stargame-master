@@ -4,10 +4,19 @@ import javafx.scene.image.Image;
 
 public abstract class ActiveObject extends Sprite {
 
-    ActiveObject(int x, int y, int w, int h, Image image) {
-        super(x, y, w, h, image);
+    private int hp;
 
+    ActiveObject(int x, int y, int w, int h, Image image, int hp) {
+        super(x, y, w, h, image);
+        this.hp = hp;
     }
 
-    public abstract Sprite shoot();
+    public abstract void shoot();
+
+    public void takeDamage(int damage) {
+        this.hp -= damage;
+        if (this.hp <= 0) {
+            this.setDead(true);
+        }
+    }
 }
