@@ -19,8 +19,10 @@ public class NormalEnemy extends ActiveObject {
 
     @Override
     public void shoot() {
-        Main.getMainGamePane().getChildren().add(new EnemyBullet((int) this.getTranslateX() + 20, (int) this.getTranslateY(),
-                BULLET_WIDTH, BULLET_HEIGHT, BULLET_IMAGE, ENEMY_BULLET_DAMAGE));
+        if (!isDead()) {
+            Main.getMainGamePane().getChildren().add(new EnemyBullet((int) this.getTranslateX() + 20, (int) this.getTranslateY(),
+                    BULLET_WIDTH, BULLET_HEIGHT, BULLET_IMAGE, ENEMY_BULLET_DAMAGE));
+        }
     }
 
     public void move() {

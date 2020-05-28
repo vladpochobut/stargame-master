@@ -17,7 +17,7 @@ public class BonusCoin extends Sprite {
     }
 
 
-    public Sprite move(){
+    public void move(){
         KeyValue xValue = new KeyValue(this.xProperty(), 100);
         KeyValue yValue = new KeyValue(this.yProperty(), 100);
         KeyValue xValue1 = new KeyValue(this.xProperty(), 0);
@@ -29,6 +29,5 @@ public class BonusCoin extends Sprite {
         timeline.getKeyFrames().addAll(keyFrame);
         timeline.play();
 
-        return null;
     }
 }

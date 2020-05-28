@@ -16,12 +16,14 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 import javafx.util.Duration;
+
+import java.io.File;
 
 import static sample.ControllerUtils.MENU_IMG_PATH;
 
 public class GameMenu extends Pane {
-
     public GameMenu() {
         super();
         Image MENU_IMG = new Image(MENU_IMG_PATH);
@@ -32,8 +34,10 @@ public class GameMenu extends Pane {
 
         MenuItem newGame = new MenuItem("START!");
         newGame.setOnMouseClicked(event -> {
+            Main.getMainGamePane().removeElements();
             Main.getMainGamePane().start();
             Main.getPrimaryStage().setScene(Main.getMainGamePane().getScene());
+
         });
         MenuItem options = new MenuItem("НАСТРОЙКИ");
         MenuItem exitGame = new MenuItem("ВЫХОД");

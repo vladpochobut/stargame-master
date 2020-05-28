@@ -2,12 +2,22 @@ package sample;
 
 import javafx.scene.image.Image;
 
+import java.io.Serializable;
+
 public abstract class ActiveObject extends Sprite {
 
     private int hp;
 
     ActiveObject(int x, int y, int w, int h, Image image, int hp) {
         super(x, y, w, h, image);
+        this.hp = hp;
+    }
+
+    public int getHp() {
+        return hp;
+    }
+
+    public void setHp(int hp) {
         this.hp = hp;
     }
 
@@ -19,4 +29,5 @@ public abstract class ActiveObject extends Sprite {
             this.setDead(true);
         }
     }
+
 }

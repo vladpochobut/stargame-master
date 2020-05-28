@@ -21,7 +21,7 @@ public class SimpleEnemy extends ActiveObject {
 
     @Override
     public void shoot() {
-        if (Main.getMainGamePane() != null) {
+        if (!isDead() && Main.getMainGamePane() != null) {
             Main.getMainGamePane().getChildren().add(new EnemyBullet((int) getTranslateX() + 20,
                     (int) getTranslateY(), BULLET_WIDTH, BULLET_HEIGHT, BULLET_IMAGE, ENEMY_BULLET_DAMAGE));
         }
@@ -34,13 +34,14 @@ public class SimpleEnemy extends ActiveObject {
         timeline.setToX(getTranslateX() + direction * 100);
         timeline.setToY(getTranslateY() + direction * 100);
         timeline.setDuration(Duration.millis(3000));
-        timeline.setOnFinished(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                shoot();
-                move(direction * -1);
-            }
-        });
+            timeline.setOnFinished(new EventHandler<ActionEvent>() {
+
+                @Override
+                public void handle(ActionEvent event) {
+                    shoot();
+                    move(direction * -1);
+                }
+            });
         timeline.play();
     }
 }

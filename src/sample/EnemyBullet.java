@@ -8,4 +8,5 @@ public class EnemyBullet extends Bullet {
         super(x, y, w, h, image, damage);
         setRotate(180);
     }
+
 }

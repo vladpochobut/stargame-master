@@ -2,16 +2,26 @@ package sample;
 
 import javafx.scene.image.Image;
 
+import java.io.Serializable;
+
 import static java.lang.StrictMath.*;
 import static sample.ControllerUtils.*;
 
-public class Player extends ActiveObject {
+public class Player extends ActiveObject implements Serializable {
 
     private static final Image PLAYER_IMAGE = new Image(PLAYER_IMG_PATH);
     private Life life;
 
     public Player(int x, int y, int w, int h, int hp, Life life) {
         super(x, y, w, h, PLAYER_IMAGE, hp);
+        this.life = life;
+    }
+
+    public Life getLife() {
+        return life;
+    }
+
+    public void setLife(Life life) {
         this.life = life;
     }
 

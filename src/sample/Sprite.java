@@ -4,9 +4,12 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 
+import java.io.Serializable;
+
 public class Sprite extends Rectangle {
     private boolean dead = false;
 
+    //TODO:прописать модификаторы паблик
     Sprite(int x, int y, int w, int h, Image image) {
         setWidth(w);
         setHeight(h);
