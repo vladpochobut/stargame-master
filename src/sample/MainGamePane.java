@@ -16,8 +16,10 @@ import java.io.*;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
+
 
 import static sample.ControllerUtils.*;
 import static sample.Main.getPrimaryStage;
@@ -41,6 +43,9 @@ public class MainGamePane extends Pane implements Serializable {
     private NormalEnemy normalEnemy;
     private SimpleEnemy simpleEnemy;
     private SimpleEnemy[] enemies;
+    int firstLevelPointer = 0;
+    private AnimationTimer animationTimer;
+    int animationPointer = 0;
 
     public MainGamePane() {
         super();
@@ -87,16 +92,12 @@ public class MainGamePane extends Pane implements Serializable {
         this.score = new Text();
         this.getChildren().add(score);
 
-        AnimationTimer animationTimer = new AnimationTimer() {
+        animationTimer = new AnimationTimer() {
             @Override
             public void handle(long l) {
                 update();
                 simpleBonus();
-//                if(player.isDead()) {
-//                    Alert alert = new Alert(Alert.AlertType.INFORMATION, "Hi there");
-//                    //TODO:TrableIsHear
-//                    alert.showAndWait();
-//                }
+                animationPointer = 1;
             }
         };
         //TODO:pattern builder. try to do 2 scenes by pattern builder
@@ -107,8 +108,6 @@ public class MainGamePane extends Pane implements Serializable {
         this.RVline = new Line(650, 0, 650, 800);
         this.getChildren().addAll(DHline, LVline, RVline, UHline);
 
-        //WriteFile();
-        //System.out.println(player);
     }
 
 
@@ -150,19 +149,16 @@ public class MainGamePane extends Pane implements Serializable {
                 enemies[i].setHp(currentHP);
             }
             Double playerCoordX = (Double) ois.readObject();
+            System.out.println(playerCoordX);
             player.setTranslateX(playerCoordX);
             Double playerCoordY = (Double) ois.readObject();
+            System.out.println(playerCoordY);
             player.setTranslateX(playerCoordY);
             Boolean pisDead = (Boolean)ois.readObject();
             player.setDead(pisDead);
             Integer currentHP = (Integer)ois.readObject();
             player.setHp(currentHP);
 
-
-
-
-           // System.out.println(PlayerCoordX);
-           // System.out.println(PlayerCoordY);
             ois.close();
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
@@ -170,6 +166,16 @@ public class MainGamePane extends Pane implements Serializable {
     }
 
     public void removeElements() {
+        if(firstLevelPointer == 1) {
+            for (SimpleEnemy enemy : enemies) {
+                enemy.setDead(true);
+                this.getChildren().remove(enemy);
+            }
+        }
+        if(animationPointer == 1) {
+            animationTimer.stop();
+        }
+        bonus_apd = 0;
         bonus = 0;
         this.getChildren().removeAll(score, player, life);
         sprites().clear();
@@ -181,22 +187,20 @@ public class MainGamePane extends Pane implements Serializable {
         score.setY(780);
         score.setText("Score : " + KILL_BONUS);
         firstLevel();
-        ReadFile(enemies);
-
-
-
     }
 
-    public void start() {
+
+    public void start(int i ) {
         createNewelements();
         setElements();
+        if (i == 1){
+          ReadFile(enemies);
+        }
     }
 
 
     private void update() {
-        //WriteFile(enemies);
-        // ReadFile();
-
+        WriteFile(enemies);
 
         t += 0.016;
 
@@ -274,8 +278,6 @@ public class MainGamePane extends Pane implements Serializable {
         });
         if (t > 2) {
             t = 0;
-           // System.out.println(simpleEnemy.getTranslateX());
-           // System.out.println(simpleEnemy.getTranslateY());
         }
 
         this.setScore(bonus);
@@ -297,6 +299,7 @@ public class MainGamePane extends Pane implements Serializable {
     }
 
     private void firstLevel() {
+        firstLevelPointer=1;
         this.enemies = new SimpleEnemy[NUMBER_OF_SIMPLE_ENEMIES];
         for (int i = 0; i < NUMBER_OF_SIMPLE_ENEMIES; i++, kolOfAlive++) {
             enemies[i] = new SimpleEnemy(60 + i * 50, 100, ENEMY_WIDTH, ENEMY_HEIGHT);
@@ -308,7 +311,6 @@ public class MainGamePane extends Pane implements Serializable {
                 ((SimpleEnemy) enemy).move(1);
             }
         }
-
     }
 
 

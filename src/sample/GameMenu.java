@@ -35,14 +35,20 @@ public class GameMenu extends Pane {
         MenuItem newGame = new MenuItem("START!");
         newGame.setOnMouseClicked(event -> {
             Main.getMainGamePane().removeElements();
-            Main.getMainGamePane().start();
+            Main.getMainGamePane().start(0);
             Main.getPrimaryStage().setScene(Main.getMainGamePane().getScene());
 
         });
         MenuItem options = new MenuItem("НАСТРОЙКИ");
+        MenuItem load = new MenuItem("ЗАГРУЗИТЬ");
+        load.setOnMouseClicked(mouseEvent ->{
+            Main.getMainGamePane().removeElements();
+            Main.getMainGamePane().start(1);
+            Main.getPrimaryStage().setScene(Main.getMainGamePane().getScene());
+        });
         MenuItem exitGame = new MenuItem("ВЫХОД");
         SubMenu mainMenu = new SubMenu(
-                newGame, options, exitGame
+                newGame, options,load, exitGame
         );
         MenuItem sound = new MenuItem("ЗВУК");
         MenuItem gameDifficulty = new MenuItem("СЛОЖНОСТЬ");
