@@ -1,4 +1,4 @@
-package sample.game;
+package sample.game.objects;
 
 import javafx.animation.Animation;
 import javafx.animation.FadeTransition;
@@ -25,7 +25,7 @@ import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import static sample.game.ControllerUtils.MENU_IMG_PATH;
+import static sample.game.objects.ControllerUtils.MENU_IMG_PATH;
 
 
 public class GameMenu extends Pane {

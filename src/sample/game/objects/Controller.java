@@ -1,4 +1,4 @@
-package sample.game;
+package sample.game.objects;
 
 public class Controller {
 }

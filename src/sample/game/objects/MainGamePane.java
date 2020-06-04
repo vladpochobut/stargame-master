@@ -1,4 +1,4 @@
-package sample.game;
+package sample.game.objects;
 
 import javafx.animation.AnimationTimer;
 import javafx.event.EventHandler;
@@ -17,8 +17,8 @@ import java.io.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static sample.game.ControllerUtils.*;
-import static sample.game.Main.getPrimaryStage;
+import static sample.game.objects.ControllerUtils.*;
+import static sample.game.objects.Main.getPrimaryStage;
 
 public class MainGamePane extends Pane implements Serializable {
 

@@ -1,4 +1,4 @@
-package sample.game;
+package sample.game.objects;
 
 import javafx.animation.RotateTransition;
 import javafx.animation.Timeline;
@@ -6,7 +6,7 @@ import javafx.scene.image.Image;
 import javafx.scene.transform.Translate;
 import javafx.util.Duration;
 
-import static sample.game.ControllerUtils.*;
+import static sample.game.objects.ControllerUtils.*;
 
 public class NormalEnemy extends ActiveObject {
     private static final Image NORMAL_ENEMY_IMAGE = new Image(NORMAL_ENEMY_IMG_PATH);
