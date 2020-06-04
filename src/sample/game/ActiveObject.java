@@ -1,8 +1,6 @@
-package sample;
+package sample.game;
 
 import javafx.scene.image.Image;
-
-import java.io.Serializable;
 
 public abstract class ActiveObject extends Sprite {
 

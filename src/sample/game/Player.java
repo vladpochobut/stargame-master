@@ -1,11 +1,10 @@
-package sample;
+package sample.game;
 
 import javafx.scene.image.Image;
 
 import java.io.Serializable;
 
-import static java.lang.StrictMath.*;
-import static sample.ControllerUtils.*;
+import static sample.game.ControllerUtils.*;
 
 public class Player extends ActiveObject implements Serializable {
 

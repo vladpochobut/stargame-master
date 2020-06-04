@@ -1,4 +1,4 @@
-package sample;
+package sample.game;
 
 import javafx.application.Application;
 import javafx.stage.Stage;

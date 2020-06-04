@@ -1,15 +1,12 @@
-package sample;
+package sample.game;
 
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.image.Image;
 import javafx.util.Duration;
 
-import static sample.ControllerUtils.*;
+import static sample.game.ControllerUtils.*;
 
 public class SimpleEnemy extends ActiveObject {
 

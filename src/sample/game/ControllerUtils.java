@@ -1,15 +1,12 @@
-package sample;
+package sample.game;
 
 import javafx.scene.image.Image;
-import javafx.scene.input.KeyEvent;
-import javafx.stage.Stage;
 
 public interface ControllerUtils {
 
     int SCENE_WIDTH = 650;
     int SCENE_HEIGHT = 800;
 
-    /*C:\Users\desmond1999d\Downloads\double 2-20191102T212017Z-001\stargame-master\src\sample\pictures\1.png*/
     String ENEMY_IMG_PATH = "file:.\\src\\sample\\pictures\\1.png";
     int ENEMY_WIDTH = 30;
     int ENEMY_HEIGHT = 30;

@@ -1,4 +1,4 @@
-package sample;
+package sample.game;
 
 import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
@@ -6,7 +6,7 @@ import javafx.scene.image.ImageView;
 
 import java.io.Serializable;
 
-import static sample.ControllerUtils.*;
+import static sample.game.ControllerUtils.*;
 
 public class Life extends ImageView implements Serializable {
 

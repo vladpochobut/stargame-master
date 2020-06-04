@@ -1,4 +1,4 @@
-package sample;
+package sample.game;
 
 import javafx.animation.Animation;
 import javafx.animation.FadeTransition;
@@ -16,14 +16,24 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
 import javafx.util.Duration;
 
-import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.util.ArrayList;
+import java.util.Map;
 
-import static sample.ControllerUtils.MENU_IMG_PATH;
+import static sample.game.ControllerUtils.MENU_IMG_PATH;
+import static sample.game.ControllerUtils.NUMBER_OF_SIMPLE_ENEMIES;
+
+
 
 public class GameMenu extends Pane {
+
+    private String names;
+    private Double score;
+
     public GameMenu() {
         super();
         Image MENU_IMG = new Image(MENU_IMG_PATH);
@@ -32,9 +42,10 @@ public class GameMenu extends Pane {
         img.setFitWidth(1200);
         this.getChildren().add(img);
 
+
         MenuItem newGame = new MenuItem("START!");
         newGame.setOnMouseClicked(event -> {
-            Main.getMainGamePane().removeElements();
+            Main.getMainGamePane().removeElements(0);
             Main.getMainGamePane().start(0);
             Main.getPrimaryStage().setScene(Main.getMainGamePane().getScene());
 
@@ -42,7 +53,7 @@ public class GameMenu extends Pane {
         MenuItem options = new MenuItem("НАСТРОЙКИ");
         MenuItem load = new MenuItem("ЗАГРУЗИТЬ");
         load.setOnMouseClicked(mouseEvent ->{
-            Main.getMainGamePane().removeElements();
+            Main.getMainGamePane().removeElements(1);
             Main.getMainGamePane().start(1);
             Main.getPrimaryStage().setScene(Main.getMainGamePane().getScene());
         });
@@ -56,9 +67,19 @@ public class GameMenu extends Pane {
         MenuItem video = new MenuItem("ВИДЕО");
         //    MenuItem keys = new MenuItem("УПРАВЛЕНИЕ");
         MenuItem optionsBack = new MenuItem("НАЗАД");
+        ReadFileNames();
+        ArrayList<Score> tableScore = new ArrayList<>();
+        tableScore.add(new Score(names,score));
+        tableScore.sort((o1, o2) -> (int) (o1.getScore() - o2.getScore()));
         SubMenu optionsMenu = new SubMenu(
-                sound, video/* keys*/, gameDifficulty, optionsBack
+                sound, video ,gameDifficulty, optionsBack
         );
+        for ( Score score : tableScore ){
+          optionsMenu.add(new MenuItem("" + score.toString()));
+        }
+
+
+
 //        MenuItem NG1 = new MenuItem("ТУРНИР");
 
 //        MenuItem NG2 = new MenuItem("ОДИН ЗАЕЗД");
@@ -94,6 +115,22 @@ public class GameMenu extends Pane {
                 }
             }
         });
+    }
+
+
+    public void ReadFileNames() {
+        try {
+            FileInputStream fis = new FileInputStream("names.bin");
+            ObjectInputStream ois = new ObjectInputStream(fis);
+
+
+            names = (String) ois.readObject();
+            score = (Double) ois.readObject();
+
+            ois.close();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     private static class MenuItem extends StackPane {
@@ -149,6 +186,9 @@ public class GameMenu extends Pane {
             for (MenuItem item : items) {
                 getChildren().addAll(item);
             }
+        }
+        public void add(MenuItem menuItem){
+            getChildren().addAll(menuItem);
         }
     }
 }
