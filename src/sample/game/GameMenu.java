@@ -19,20 +19,18 @@ import javafx.scene.text.Text;
 import javafx.util.Duration;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
-import java.util.Map;
+import java.util.List;
 
 import static sample.game.ControllerUtils.MENU_IMG_PATH;
-import static sample.game.ControllerUtils.NUMBER_OF_SIMPLE_ENEMIES;
-
 
 
 public class GameMenu extends Pane {
 
-    private String names;
-    private Double score;
+    private List<Score> scores;
 
     public GameMenu() {
         super();
@@ -51,49 +49,44 @@ public class GameMenu extends Pane {
 
         });
         MenuItem options = new MenuItem("НАСТРОЙКИ");
+        MenuItem results = new MenuItem("ТАБЛИЦА РЕЗУЛЬТАТОВ");
         MenuItem load = new MenuItem("ЗАГРУЗИТЬ");
-        load.setOnMouseClicked(mouseEvent ->{
+        load.setOnMouseClicked(mouseEvent -> {
             Main.getMainGamePane().removeElements(1);
             Main.getMainGamePane().start(1);
             Main.getPrimaryStage().setScene(Main.getMainGamePane().getScene());
         });
         MenuItem exitGame = new MenuItem("ВЫХОД");
         SubMenu mainMenu = new SubMenu(
-                newGame, options,load, exitGame
+                newGame, options,results, load, exitGame
         );
         MenuItem sound = new MenuItem("ЗВУК");
         MenuItem gameDifficulty = new MenuItem("СЛОЖНОСТЬ");
 
         MenuItem video = new MenuItem("ВИДЕО");
-        //    MenuItem keys = new MenuItem("УПРАВЛЕНИЕ");
         MenuItem optionsBack = new MenuItem("НАЗАД");
         ReadFileNames();
-        ArrayList<Score> tableScore = new ArrayList<>();
-        tableScore.add(new Score(names,score));
-        tableScore.sort((o1, o2) -> (int) (o1.getScore() - o2.getScore()));
         SubMenu optionsMenu = new SubMenu(
-                sound, video ,gameDifficulty, optionsBack
+                sound, video, gameDifficulty, optionsBack
         );
-        for ( Score score : tableScore ){
-          optionsMenu.add(new MenuItem("" + score.toString()));
+        MenuItem playerResalts = new MenuItem("ТАБЛИЦА РЕЗУЛЬАТОВ :");
+        MenuItem resultsBack = new MenuItem("НАЗАД");
+        SubMenu resultsMenu = new SubMenu(playerResalts,resultsBack);
+        for (Score score : scores) {
+            resultsMenu.add(new MenuItem("" + score.toString()));
         }
 
 
 
-//        MenuItem NG1 = new MenuItem("ТУРНИР");
 
-//        MenuItem NG2 = new MenuItem("ОДИН ЗАЕЗД");
-//        MenuItem NG3 = new MenuItem("2 ИГРОКА");
-//        MenuItem NG4 = new MenuItem("НАЗАД");
-//        SubMenu newGameMenu = new SubMenu(
-//                NG1, NG2, NG3, NG4
-//        );
         MenuBox menuBox = new MenuBox(mainMenu);
 
         //     newGame.setOnMouseClicked(event -> menuBox.setSubMenu(newGameMenu));
         options.setOnMouseClicked(event -> menuBox.setSubMenu(optionsMenu));
+        results.setOnMouseClicked(event -> menuBox.setSubMenu(resultsMenu));
         exitGame.setOnMouseClicked(event -> System.exit(0));
         optionsBack.setOnMouseClicked(event -> menuBox.setSubMenu(mainMenu));
+        resultsBack.setOnMouseClicked(event -> menuBox.setSubMenu(mainMenu));
         //    NG4.setOnMouseClicked(event -> menuBox.setSubMenu(mainMenu));
         this.getChildren().addAll(menuBox);
 
@@ -118,18 +111,34 @@ public class GameMenu extends Pane {
     }
 
 
-    public void ReadFileNames() {
+    private void ReadFileNames() {
+        this.scores = new ArrayList<>();
+        boolean isEOF = false;
+
+        FileInputStream fis = null;
         try {
-            FileInputStream fis = new FileInputStream("names.bin");
-            ObjectInputStream ois = new ObjectInputStream(fis);
-
-
-            names = (String) ois.readObject();
-            score = (Double) ois.readObject();
-
-            ois.close();
-        } catch (IOException | ClassNotFoundException e) {
+            fis = new FileInputStream("names.bin");
+        } catch (FileNotFoundException e) {
             e.printStackTrace();
+            return;
+        }
+        ObjectInputStream ois = null;
+        try {
+            ois = new ObjectInputStream(fis);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        while (!isEOF) {
+            try {
+                String name = (String) ois.readObject();
+                Double scoreValue = (Double) ois.readObject();
+                Score score = new Score(name, scoreValue);
+                scores.add(score);
+            } catch (IOException | ClassNotFoundException e) {
+                isEOF = true;
+            }
         }
     }
 
@@ -187,9 +196,14 @@ public class GameMenu extends Pane {
                 getChildren().addAll(item);
             }
         }
-        public void add(MenuItem menuItem){
+
+        public void add(MenuItem menuItem) {
             getChildren().addAll(menuItem);
         }
+    }
+
+    public List<Score> getScores() {
+        return scores;
     }
 }
 

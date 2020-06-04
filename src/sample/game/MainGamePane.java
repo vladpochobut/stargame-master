@@ -134,8 +134,13 @@ public class MainGamePane extends Pane implements Serializable {
             FileOutputStream fos = new FileOutputStream("names.bin");
             ObjectOutputStream oos = new ObjectOutputStream(fos);
 
-                oos.writeObject(playerName);
-                oos.writeObject(bonus);
+            oos.writeObject(playerName);
+            oos.writeObject(bonus);
+            List<Score> scores = Main.getGameMenu().getScores();
+            for (Score score : scores) {
+                oos.writeObject(score.getName());
+                oos.writeObject(score.getScore());
+            }
 
             oos.close();
         } catch (IOException e) {
@@ -214,7 +219,6 @@ public class MainGamePane extends Pane implements Serializable {
         deathFlag = 0;
 
     }
-
 
 
     private String getName() {
