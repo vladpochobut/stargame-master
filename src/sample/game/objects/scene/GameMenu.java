@@ -1,4 +1,4 @@
-package sample.game.objects;
+package sample.game.objects.scene;
 
 import javafx.animation.Animation;
 import javafx.animation.FadeTransition;
@@ -17,15 +17,13 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
+import sample.game.objects.Main;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.ObjectInputStream;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static sample.game.objects.ControllerUtils.MENU_IMG_PATH;
+import static sample.game.objects.controller.ControllerUtils.MENU_IMG_PATH;
 
 
 public class GameMenu extends Pane {
@@ -65,13 +63,18 @@ public class GameMenu extends Pane {
 
         MenuItem video = new MenuItem("ВИДЕО");
         MenuItem optionsBack = new MenuItem("НАЗАД");
-        ReadFileNames();
+        ReadFileNames(0);
         SubMenu optionsMenu = new SubMenu(
                 sound, video, gameDifficulty, optionsBack
         );
         MenuItem playerResalts = new MenuItem("ТАБЛИЦА РЕЗУЛЬАТОВ :");
+        MenuItem clearResalts = new MenuItem("ОЧИСТИТЬ ТАБЛИЦУ :");
+        clearResalts.setOnMouseClicked(event->{
+            ClearFileNames();
+            ReadFileNames(1);
+        });
         MenuItem resultsBack = new MenuItem("НАЗАД");
-        SubMenu resultsMenu = new SubMenu(playerResalts,resultsBack);
+        SubMenu resultsMenu = new SubMenu(playerResalts,clearResalts,resultsBack);
         for (Score score : scores) {
             resultsMenu.add(new MenuItem("" + score.toString()));
         }
@@ -109,9 +112,22 @@ public class GameMenu extends Pane {
             }
         });
     }
+    public void ClearFileNames() {
+        try {
+            FileOutputStream fos = new FileOutputStream("names.bin");
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
+
+            oos.writeObject("");
 
 
-    private void ReadFileNames() {
+            oos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    private void ReadFileNames(int i) {
         this.scores = new ArrayList<>();
         boolean isEOF = false;
 
@@ -135,6 +151,7 @@ public class GameMenu extends Pane {
                 String name = (String) ois.readObject();
                 Double scoreValue = (Double) ois.readObject();
                 Score score = new Score(name, scoreValue);
+                if (i == 1){scores.clear();}
                 scores.add(score);
             } catch (IOException | ClassNotFoundException e) {
                 isEOF = true;

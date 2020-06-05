@@ -1,4 +1,4 @@
-package sample.game.objects;
+package sample.game.objects.entity;
 
 import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;

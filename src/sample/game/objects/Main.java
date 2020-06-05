@@ -2,6 +2,8 @@ package sample.game.objects;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
+import sample.game.objects.scene.GameMenu;
+import sample.game.objects.scene.MainGamePane;
 
 public class Main extends Application {
 

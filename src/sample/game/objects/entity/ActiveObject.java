@@ -1,4 +1,4 @@
-package sample.game.objects;
+package sample.game.objects.entity;
 
 import javafx.scene.image.Image;
 
@@ -6,7 +6,7 @@ public abstract class ActiveObject extends Sprite {
 
     private int hp;
 
-    ActiveObject(int x, int y, int w, int h, Image image, int hp) {
+   public ActiveObject(int x, int y, int w, int h, Image image, int hp) {
         super(x, y, w, h, image);
         this.hp = hp;
     }

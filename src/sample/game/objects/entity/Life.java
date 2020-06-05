@@ -1,4 +1,4 @@
-package sample.game.objects;
+package sample.game.objects.entity;
 
 import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
@@ -6,13 +6,13 @@ import javafx.scene.image.ImageView;
 
 import java.io.Serializable;
 
-import static sample.game.objects.ControllerUtils.*;
+import static sample.game.objects.controller.ControllerUtils.*;
 
 public class Life extends ImageView implements Serializable {
 
     private static final Image LIFE_IMG = new Image(LIFE_IMG_PATH);
 
-    Life(int x, int y, int w, int h) {
+     public Life(int x, int y, int w, int h) {
         super(LIFE_IMG);
         setTranslateX(x);
         setTranslateY(y);

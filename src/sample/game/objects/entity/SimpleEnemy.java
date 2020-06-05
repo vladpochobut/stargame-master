@@ -1,12 +1,13 @@
-package sample.game.objects;
+package sample.game.objects.entity;
 
 import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.image.Image;
 import javafx.util.Duration;
+import sample.game.objects.Main;
 
-import static sample.game.objects.ControllerUtils.*;
+import static sample.game.objects.controller.ControllerUtils.*;
 
 public class SimpleEnemy extends ActiveObject {
 

@@ -1,10 +1,11 @@
-package sample.game.objects;
+package sample.game.objects.entity;
 
 import javafx.scene.image.Image;
+import sample.game.objects.Main;
 
 import java.io.Serializable;
 
-import static sample.game.objects.ControllerUtils.*;
+import static sample.game.objects.controller.ControllerUtils.*;
 
 public class Player extends ActiveObject implements Serializable {
 

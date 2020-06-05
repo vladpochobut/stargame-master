@@ -1,4 +1,4 @@
-package sample.game.objects;
+package sample.game.objects.scene;
 
 public class Score  {
     private String name;
@@ -6,10 +6,8 @@ public class Score  {
 
     @Override
     public String toString() {
-        return "Score{" +
-                "name='" + name + '\'' +
-                ", score=" + score +
-                '}';
+        return "игрок='" + name + '\'' +
+                ", счёт=" + score;
     }
 
     public Score(String name , double score){

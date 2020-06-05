@@ -1,4 +1,4 @@
-package sample.game.objects;
+package sample.game.objects.entity;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -6,13 +6,13 @@ import javafx.animation.Timeline;
 import javafx.scene.image.Image;
 import javafx.util.Duration;
 
-import static sample.game.objects.ControllerUtils.*;
+import static sample.game.objects.controller.ControllerUtils.*;
 
 public class BonusCoin extends Sprite {
 
     private static final Image COIN_IMG = new Image(COIN_IMG_PATH);
 
-    BonusCoin(int w, int h) {
+    public BonusCoin(int w, int h) {
         super((int)(100+Math.random()*400), 0, w, h, COIN_IMG);
     }
 

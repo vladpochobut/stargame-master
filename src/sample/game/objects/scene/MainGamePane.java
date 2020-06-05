@@ -1,4 +1,4 @@
-package sample.game.objects;
+package sample.game.objects.scene;
 
 import javafx.animation.AnimationTimer;
 import javafx.event.EventHandler;
@@ -11,13 +11,15 @@ import javafx.scene.layout.Pane;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Polyline;
 import javafx.scene.text.Text;
+import sample.game.objects.*;
+import sample.game.objects.entity.*;
 
 import javax.swing.*;
 import java.io.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static sample.game.objects.ControllerUtils.*;
+import static sample.game.objects.controller.ControllerUtils.*;
 import static sample.game.objects.Main.getPrimaryStage;
 
 public class MainGamePane extends Pane implements Serializable {
@@ -37,9 +39,11 @@ public class MainGamePane extends Pane implements Serializable {
     private transient Line LVline;
     private transient Line RVline;
     private NormalEnemy normalEnemy;
+    private NormalEnemy[] nenemies;
     private SimpleEnemy simpleEnemy;
     private SimpleEnemy[] enemies;
-    int firstLevelPointer = 0;
+    private int firstLevelPointer = 0;
+    private int secondLevelPointer = 0;
     private AnimationTimer animationTimer;
     int animationPointer = 0;
     private JPanel myRootPane;
@@ -71,6 +75,7 @@ public class MainGamePane extends Pane implements Serializable {
             @Override
             public void handle(KeyEvent t) {
                 if (t.getCode() == KeyCode.ESCAPE) {
+                    player.setDead(true);
                     getPrimaryStage().setScene(Main.getGameMenu().getScene());
                 }
             }
@@ -187,6 +192,12 @@ public class MainGamePane extends Pane implements Serializable {
     public void removeElements(int i) {
         if (firstLevelPointer == 1) {
             for (SimpleEnemy enemy : enemies) {
+                enemy.setDead(true);
+                this.getChildren().remove(enemy);
+            }
+        }
+        if (secondLevelPointer == 1) {
+            for (NormalEnemy enemy : nenemies) {
                 enemy.setDead(true);
                 this.getChildren().remove(enemy);
             }
@@ -322,10 +333,13 @@ public class MainGamePane extends Pane implements Serializable {
 
     private void secondLevel() {
         bonus++;
+        secondLevelPointer = 1;
+        this.nenemies = new NormalEnemy[NUMBER_OF_NORMAL_ENEMIES];
         for (int i = 0; i < NUMBER_OF_NORMAL_ENEMIES; i++, kolOfAlive++) {
-            this.normalEnemy = new NormalEnemy(90 + i * 60, 200, ENEMY_WIDTH, ENEMY_HEIGHT);
-            this.getChildren().add(normalEnemy);
+           nenemies[i] = new NormalEnemy(90 + i * 60, 200, ENEMY_WIDTH, ENEMY_HEIGHT);
         }
+        this.getChildren().addAll(nenemies);
+
         for (Sprite enemyN : sprites()) {
             if (enemyN instanceof NormalEnemy) {
                 ((NormalEnemy) enemyN).move();

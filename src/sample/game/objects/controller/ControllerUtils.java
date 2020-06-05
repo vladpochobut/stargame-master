@@ -1,4 +1,4 @@
-package sample.game.objects;
+package sample.game.objects.controller;
 
 import javafx.scene.image.Image;
 
